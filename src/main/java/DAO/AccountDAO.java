@@ -1,9 +1,5 @@
 package DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.*;
 import Model.Account;
 import Util.ConnectionUtil;
@@ -60,6 +56,57 @@ public class AccountDAO {
                     rs.getString("username"),
                     rs.getString("password"));
                 return account;
+                
+            }
+        } catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+
+    // get account by id
+
+    public Account findByAccountId(int accountId) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "select * from account where account_id = ?;";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, accountId);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()) {
+                Account account = new Account(
+                    rs.getInt("account_id"),
+                    rs.getString("username"),
+                    rs.getString("password"));
+                return account;
+                
+            }
+        } catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public Account login(Account account) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "select * from account where username = ? and password = ?;";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()) {
+                return new Account(
+                    rs.getInt("account_id"),
+                    rs.getString("username"),
+                    rs.getString("password"));
                 
             }
         } catch(SQLException e) {

@@ -89,33 +89,48 @@ public class MessageDAO {
 
     // delete message by Id
 
-    public boolean deleteMessageById(int id) {
+    public Message deleteMessageById(int id) {
         Connection connection = ConnectionUtil.getConnection();
-        
+        Message deletedMessage = null;
         try {
-            String sql = "delete from message where message_id = ?;";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setInt(1, id);
-
-            return preparedStatement.executeUpdate() > 0;
             
+            String sqlFind = "select * from message where message_id = ?;";
+            PreparedStatement selectPreparedStatement = connection.prepareStatement(sqlFind);
+            selectPreparedStatement.setInt(1, id);
+            ResultSet rs = selectPreparedStatement.executeQuery();
+
+            if(rs.next()) {
+                deletedMessage = new Message(
+                    rs.getInt("message_id"),
+                    rs.getInt("posted_by"),
+                    rs.getString("message_text"),
+                    rs.getLong("time_posted_epoch")
+                    );
+
+                String sqlDelete = "delete from message where message_id = ?;";
+                PreparedStatement preparedStatement = connection.prepareStatement(sqlDelete);
+        
+                preparedStatement.setInt(1, id);
+        
+                preparedStatement.executeUpdate();
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return false;
         }
+
+        return deletedMessage;
     }
 
     // update message by id
 
-    public boolean updateMessage(int id, String messageText) {
+    public boolean updateMessage(int id, Message message) {
         Connection connection = ConnectionUtil.getConnection();
         
         try {
             String sql = "update message set message_text = ? where message_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setString(1, messageText);
+            preparedStatement.setString(1, message.getMessage_text());
             preparedStatement.setInt(2, id);
 
             return preparedStatement.executeUpdate() > 0;
