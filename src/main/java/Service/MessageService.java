@@ -20,6 +20,11 @@ public class MessageService {
         this.accountDAO = accountDAO;
     }
 
+    /**
+     * Creates a message using MessageDAO
+     * @param message
+     * @return message created
+     */
     public Message createMessage(Message message) {
         if(validate(message)) {
             return messageDAO.createMessage(message);
@@ -28,18 +33,38 @@ public class MessageService {
         }
     }
 
+    /**
+     * finds all messages using MessageDAO
+     * @return all messages
+     */
     public List<Message> findAll() {
         return messageDAO.findAll();
     }
 
+    /**
+     * finds a message by it's ID
+     * @param id
+     * @return the message found
+     */
     public Message findMessageById(int id) {
         return messageDAO.getMessageById(id);
     }
 
+    /**
+     * delete a message by its ID
+     * @param id
+     * @return the message deleted
+     */
     public Message deleteMessageById(int id) {
         return messageDAO.deleteMessageById(id);
     }
 
+    /**
+     * updates a messages message_text field
+     * @param id
+     * @param message
+     * @return the final updated message
+     */
     public Message updateMessage(int id, Message message) {
         if(validate(id, message)) {
             if(messageDAO.updateMessage(id, message)) {
@@ -52,10 +77,24 @@ public class MessageService {
         }
     }
 
+    /**
+     * finds all messages from a user by their ID
+     * @param userId
+     * @return the list of messages by user
+     */
     public List<Message> getMessagesFromUserById(int userId) {
         return messageDAO.getAllMessagesFromUserById(userId);
     }
 
+    /**
+     * validates for update
+     * checks if text is blank
+     * checks if text is too big
+     * checks if id has any message attached to it
+     * @param id
+     * @param message
+     * @return true if update is valid to continue, false if not
+     */
     private boolean validate(int id, Message message) {
         if(message.getMessage_text().isBlank()) {
             return false;
@@ -72,6 +111,11 @@ public class MessageService {
         return true;
     }
 
+    /**
+     * validates a message
+     * @param message
+     * @return true if the message is valid, false if not
+     */
     private boolean validate(Message message) {
         if(message == null) {
             return false;

@@ -12,8 +12,12 @@ import Model.Message;
 import Util.ConnectionUtil;
 
 public class MessageDAO {
-    // create message
-
+    
+    /**
+     * Create a message
+     * @param message
+     * @return Message created
+     */
     public Message createMessage(Message message) {
         Connection connection = ConnectionUtil.getConnection();
 
@@ -38,7 +42,10 @@ public class MessageDAO {
         return null;
     }
 
-    // get all messages
+    /**
+     * Finds all messages
+     * @return all messages
+     */
     public List<Message> findAll() {
         Connection connection = ConnectionUtil.getConnection();
         List<Message> messages = new ArrayList<>();
@@ -61,8 +68,12 @@ public class MessageDAO {
         return messages;
     }
 
-    // get message by Id
-
+    
+    /**
+     * finds a message by its ID
+     * @param id
+     * @return the message found or null if not found
+     */
     public Message getMessageById(int id) {
         Connection connection = ConnectionUtil.getConnection();
 
@@ -87,13 +98,17 @@ public class MessageDAO {
         return null;
     }
 
-    // delete message by Id
-
+    
+    /**
+     * Delete a message by its ID
+     * @param id
+     * @return The message deleted
+     */
     public Message deleteMessageById(int id) {
         Connection connection = ConnectionUtil.getConnection();
         Message deletedMessage = null;
         try {
-            
+            // first find the message to return it later
             String sqlFind = "select * from message where message_id = ?;";
             PreparedStatement selectPreparedStatement = connection.prepareStatement(sqlFind);
             selectPreparedStatement.setInt(1, id);
@@ -107,12 +122,13 @@ public class MessageDAO {
                     rs.getLong("time_posted_epoch")
                     );
 
+                // now that we have found the message, we can delete it.
                 String sqlDelete = "delete from message where message_id = ?;";
                 PreparedStatement preparedStatement = connection.prepareStatement(sqlDelete);
         
                 preparedStatement.setInt(1, id);
         
-                preparedStatement.executeUpdate();
+                preparedStatement.executeUpdate(); // delete
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -121,8 +137,13 @@ public class MessageDAO {
         return deletedMessage;
     }
 
-    // update message by id
-
+    
+    /**
+     * Updates the message_text of the Message
+     * @param id - message id
+     * @param message 
+     * @return true if update completed, false if not
+     */
     public boolean updateMessage(int id, Message message) {
         Connection connection = ConnectionUtil.getConnection();
         
@@ -133,7 +154,8 @@ public class MessageDAO {
             preparedStatement.setString(1, message.getMessage_text());
             preparedStatement.setInt(2, id);
 
-            return preparedStatement.executeUpdate() > 0;
+            // did it update any rows?
+            return preparedStatement.executeUpdate() > 0; 
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -141,7 +163,11 @@ public class MessageDAO {
         }
     }
 
-    // get all messages by userId
+    /**
+     * finds all messages posted by a user by their ID
+     * @param userId
+     * @return List of messages by a user
+     */
     public List<Message> getAllMessagesFromUserById(int userId) {
         Connection connection = ConnectionUtil.getConnection();
         List<Message> messages = new ArrayList<>();

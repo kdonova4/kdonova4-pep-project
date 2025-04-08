@@ -65,9 +65,11 @@ public class AccountDAO {
         return null;
     }
 
-
-    // get account by id
-
+    /**
+     * Find account by its ID
+     * @param accountId
+     * @return Account found
+     */
     public Account findByAccountId(int accountId) {
         Connection connection = ConnectionUtil.getConnection();
         try {
@@ -92,6 +94,11 @@ public class AccountDAO {
         return null;
     }
 
+    /**
+     * Log into account with username and password
+     * @param account
+     * @return return the Account logged into
+     */
     public Account login(Account account) {
         Connection connection = ConnectionUtil.getConnection();
         try {

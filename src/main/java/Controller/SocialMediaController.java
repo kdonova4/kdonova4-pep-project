@@ -34,7 +34,6 @@ public class SocialMediaController {
      */
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        app.get("example-endpoint", this::exampleHandler);
         app.post("register", this::createAccountHandler);
         app.post("login", this::loginHandler);
         app.post("messages", this::createMessageHandler);
@@ -47,16 +46,14 @@ public class SocialMediaController {
     }
 
     /**
-     * This is an example handler for an example endpoint.
+     * handles creating accounts at 'POST localhost:8080/register'
+     * 
+     * Expected Status Codes:
+     * - 200 OK: Account successfully created and returned in the response body.
+     * - 400 Bad Request: Account creation failed due to validation.
+     *
      * @param context The Javalin Context object manages information about both the HTTP request and response.
-     */
-    private void exampleHandler(Context context) {
-        context.json("sample text");
-    }
-
-    /**
-     * This is an example handler for an example endpoint.
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
+     * @throws JsonProcessingException
      */
     private void createAccountHandler(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -70,8 +67,14 @@ public class SocialMediaController {
     }
 
     /**
-     * This is an example handler for an example endpoint.
+     * handles logging into accounts at 'POST localhost:8080/login'
+     * 
+     * Expected Status Codes:
+     * - 200 OK: Account successfully logged into and returned in the response body.
+     * - 401 Unauthorized: Account login failed due to validation.
+     *
      * @param context The Javalin Context object manages information about both the HTTP request and response.
+     * @throws JsonProcessingException
      */
     private void loginHandler(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -88,8 +91,14 @@ public class SocialMediaController {
     }
 
     /**
-     * This is an example handler for an example endpoint.
+     * handles creating messages 'POST localhost:8080/messages'
+     * 
+     * Expected Status Codes:
+     * - 200 OK: Message succesfully created and returned in the response body.
+     * - 400 Bad Request: Message creation failed due to validation.
+     *
      * @param context The Javalin Context object manages information about both the HTTP request and response.
+     * @throws JsonProcessingException
      */
     private void createMessageHandler(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -103,8 +112,13 @@ public class SocialMediaController {
     }
 
     /**
-     * This is an example handler for an example endpoint.
+     * handles fetching all messages 'GET localhost:8080/messages'
+     * 
+     * Expected Status Codes:
+     * - 200 OK: Messages list returned in the response body.
+     *
      * @param context The Javalin Context object manages information about both the HTTP request and response.
+     * @throws JsonProcessingException
      */
     private void getAllMessagesHandler(Context context) {
         List<Message> messages = messageService.findAll();
@@ -112,8 +126,13 @@ public class SocialMediaController {
     }
 
     /**
-     * This is an example handler for an example endpoint.
+     * handles fetching a message by ID 'GET localhost:8080/messages/{message_id}'
+     * 
+     * Expected Status Codes:
+     * - 200 OK: Message found/not found.
+     *
      * @param context The Javalin Context object manages information about both the HTTP request and response.
+     * @throws JsonProcessingException
      */
     private void getMessageByIdHandler(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -129,10 +148,14 @@ public class SocialMediaController {
     }
 
     /**
-     * This is an example handler for an example endpoint.
+     * handles fetching all messages by user 'GET localhost:8080/accounts/{account_id}/messages'
+     * 
+     * Expected Status Codes:
+     * - 200 OK: Messages list returned in the response body.
+     *
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
-    private void getMessagesByAccountIdHandler(Context context) throws JsonProcessingException {
+    private void getMessagesByAccountIdHandler(Context context) {
         int id = Integer.parseInt(context.pathParam("account_id"));
 
         List<Message> messages = messageService.getMessagesFromUserById(id);
@@ -141,8 +164,14 @@ public class SocialMediaController {
     }
 
     /**
-     * This is an example handler for an example endpoint.
+     * handles updating a messages message_text field by ID 'PATCH localhost:8080/messages/{message_id}'
+     * 
+     * Expected Status Codes:
+     * - 200 OK: update was successful.
+     * - 400 Bad Request: Message update not succesful.
+     *
      * @param context The Javalin Context object manages information about both the HTTP request and response.
+     * @throws JsonProcessingException
      */
     private void updateMessageHandler(Context context) throws JsonProcessingException {
         int id = Integer.parseInt(context.pathParam("message_id"));
@@ -159,8 +188,13 @@ public class SocialMediaController {
     }
 
     /**
-     * This is an example handler for an example endpoint.
+     * handles deleting a message by ID 'DELETE localhost:8080/messages/{message_id}'
+     * 
+     * Expected Status Codes:
+     * - 200 OK: delete successful/message not found
+     *
      * @param context The Javalin Context object manages information about both the HTTP request and response.
+     * @throws JsonProcessingException
      */
     private void deleteMessageHandler(Context context) throws JsonProcessingException {
         int id = Integer.parseInt(context.pathParam("message_id"));
