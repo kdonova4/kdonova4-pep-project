@@ -33,7 +33,6 @@ public class AccountDAO {
         return null;
     }
 
-    //get getAccountByUsername
 
     /**
      * Gets an account from the database by username, if no account exists by that username
